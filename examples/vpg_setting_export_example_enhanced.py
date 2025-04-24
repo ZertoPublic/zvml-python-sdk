@@ -10,62 +10,60 @@
 # The entire risk arising out of the use or performance of the sample scripts and documentation remains with you.
 
 """
-Zerto VPG Settings Export/Import Example Script
+Zerto VPG Settings Export/Import Example Script 
 
 This script demonstrates how to export and import Virtual Protection Group (VPG) settings
 using the Zerto Virtual Manager (ZVM) API. It allows for backup and restoration of VPG
 configurations, which is useful for disaster recovery planning and VPG replication.
 
 Key Features:
-1. VPG Settings Export:
-   - Export settings for specific VPGs or all VPGs
-   - Save exported settings to a JSON file
-   - Include all VPG configuration parameters
-   - Capture recovery site mappings
+1. Export Selection:
+   - List all available exports with timestamps and status
+   - Display VPGs in each export with source and target sites
+   - Compare requested VPGs with available ones in the export
+   - Allow user to select which export to use
 
-2. Settings Verification:
-   - List all available exported settings
-   - Read and display detailed settings
-   - Show summary of exported VPG configurations
-   - Verify export timestamp and status
+2. Resource Validation:
+   - Check and validate datastores, hosts, folders, and networks
+   - Allow user to select replacements for missing resources
+   - Handle both VPG-level and VM-level resource mappings
+   - Support for journal, scratch, and recovery settings
 
-3. VPG Settings Import:
-   - Import settings back to create new VPGs
-   - Restore original VPG configurations
-   - Support for multiple VPGs in single operation
-   - Validate import results
+3. Settings Import:
+   - Import validated settings back to create new VPGs
+   - Display detailed import results including:
+     - Validation failures with error messages
+     - Import failures with specific errors
+     - Successfully initiated imports with task IDs
+   - Allow user to verify changes before proceeding
 
 Required Arguments:
     --zvm_address: Protected site ZVM address
     --client_id: Protected site Keycloak client ID
     --client_secret: Protected site Keycloak client secret
     --ignore_ssl: Ignore SSL certificate verification (optional)
-    --vpg_names: Comma-separated list of VPG names to export (optional)
-    --output_file: File path to save exported settings (optional)
+    --vpg_names: Comma-separated list of VPG names to process (optional)
 
 Example Usage:
-    python examples/vpg_setting_export_example.py \
+    python examples/vpg_setting_export_example_enhanced.py \
         --zvm_address "192.168.111.20" \
         --client_id "zerto-api" \
         --client_secret "your-secret-here" \
         --vpg_names "VpgTest1,VpgTest2" \
-        --output_file "vpg_settings.json" \
         --ignore_ssl
 
 Script Flow:
-1. Connects to protected site ZVM
-2. Exports VPG settings:
-   - For specified VPGs if vpg_names provided
-   - For all VPGs if no vpg_names specified
-3. Saves settings to file if output_file specified
-4. Verifies export by reading settings
-5. Displays VPG configuration summaries:
-   - VPG names
-   - Source and target sites
-   - RPO and journal history
-6. Pauses for manual VPG deletion
-7. Imports settings to recreate VPGs
-8. Verifies import success
+1. Connect to protected site ZVM
+2. List available exports and let user select one
+3. Display VPGs in selected export and compare with requested ones
+4. Get peer site resources (datastores, hosts, folders, networks)
+5. Validate and update resource mappings:
+   - VPG-level settings (journal, scratch, recovery)
+   - VM-level settings (host, datastore, folder, network)
+6. Save updated settings to file
+7. Allow user to verify changes
+8. Import settings to recreate VPGs
+9. Display import results with task IDs
 
 Note: This script requires only protected site credentials. It's designed for VPG
 configuration backup and restore scenarios, allowing you to quickly recreate VPGs
