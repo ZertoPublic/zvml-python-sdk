@@ -591,7 +591,7 @@ class VPGs:
                 logging.error("HTTPError occurred with no response attached.")
             raise
 
-    def create_vpg_settings(self, basic, journal, recovery, networks, vpg_identifier=None):
+    def create_vpg_settings(self, basic=None, journal=None, recovery=None, networks=None, vpg_identifier=None):
         logging.info(f'VPGs.create_vpg_settings(zvm_address={self.client.zvm_address}, vpg_identifier={vpg_identifier})')
         vpg_settings_uri = f"https://{self.client.zvm_address}/v1/vpgSettings"
         headers = {
@@ -913,6 +913,8 @@ class VPGs:
             raise
 
     def import_vpg_settings(self, settings: Dict) -> dict:
+
+    
         """
         Import VPG settings.
 
@@ -978,6 +980,50 @@ class VPGs:
             
             logging.debug(f"Import result: {json.dumps(result, indent=2)}")
             
+            return result
+            
+        except requests.exceptions.RequestException as e:
+            if e.response is not None:
+                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                try:
+                    error_details = e.response.json()
+                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                except ValueError:
+                    logging.error(f"Response content: {e.response.text}")
+            else:
+                logging.error("HTTPError occurred with no response attached.")
+            raise
+
+    def list_vpgs_from_exported_settings(self, time_stamp: str) -> List[Dict]:
+        """List VPGs from exported settings.
+        
+        Args:
+            time_stamp: Timestamp of the exported settings
+            
+        Returns:
+            List[Dict]: List of VPGs in the format:
+                [
+                    {
+                        "VpgName": "test",
+                        "SourceSiteName": "Production",
+                        "TargetSiteName": "DR"
+                    }
+                ]
+        """
+        url = f"https://{self.client.zvm_address}/v1/vpgSettings/exportedSettings/{time_stamp}/vpgsinfo"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {self.client.token}'
+        }
+
+        logging.info(f"VPGs.list_vpgs_from_exported_settings: Fetching VPGs from export {time_stamp}")
+        
+        try:
+            response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
+            response.raise_for_status()
+            result = response.json()
+            logging.info(f"Successfully retrieved {len(result)} VPGs from export {time_stamp}")
+            logging.debug(f"VPGs from export: {json.dumps(result, indent=2)}")
             return result
             
         except requests.exceptions.RequestException as e:
