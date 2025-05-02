@@ -16,12 +16,13 @@ This library provides a comprehensive Python interface to manage and automate Ze
 - Managing ZORGs (Zerto Organizations)
 
 ## Installation
-
+```bash
 git clone https://github.com/your-repo/zerto-python-library.git
 cd zerto-python-sdk
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
 ## Dependencies
 
