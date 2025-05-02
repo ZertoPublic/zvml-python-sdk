@@ -767,12 +767,12 @@ class VPGs:
                 logging.error("HTTPError occurred with no response attached.")
             raise
 
-    def export_vpg_settings(self, vpg_names: List[str]) -> dict:
+    def export_vpg_settings(self, vpg_names: List[str] = None) -> dict:
         """
         Export settings for specified VPGs.
 
         Args:
-            vpg_names: List of VPG names to export settings for
+            vpg_names: Optional list of VPG names to export settings for. If not provided, exports all.
 
         Returns:
             dict: The exported VPG settings in the format:
@@ -793,17 +793,20 @@ class VPGs:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        payload = {
-            "vpgNames": vpg_names
-        }
+        if vpg_names:
+            payload = {
+                "vpgNames": vpg_names
+            }
+        else:
+            payload = {}
 
-        logging.info(f"VPGs.export_vpg_settings: Exporting settings for VPGs: {vpg_names}")
+        logging.info(f"VPGs.export_vpg_settings: Exporting settings for VPGs: {vpg_names if vpg_names else 'ALL'}")
         
         try:
             response = requests.post(url, headers=headers, json=payload, verify=self.client.verify_certificate)
             response.raise_for_status()
             result = response.json()
-            logging.info(f"Successfully exported settings for {len(vpg_names)} VPGs at {result.get('timeStamp')}")
+            logging.info(f"Successfully exported settings for {len(vpg_names) if vpg_names else 'ALL'} VPGs at {result.get('timeStamp')}")
             logging.debug(f"Export result: {json.dumps(result, indent=2)}")
             return result
         
