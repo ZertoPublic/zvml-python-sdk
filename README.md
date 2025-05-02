@@ -17,7 +17,7 @@ This library provides a comprehensive Python interface to manage and automate Ze
 
 ## Installation
 ```bash
-git clone https://github.com/your-repo/zerto-python-sdk.git
+git clone https://github.com/ZertoPublic/zvml-python-sdk.git
 cd zerto-python-sdk
 python3 -m venv venv
 source venv/bin/activate
