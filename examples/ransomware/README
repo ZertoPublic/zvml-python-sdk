@@ -1,0 +1,119 @@
+# Linux Ransomware Simulation Scripts
+
+## Overview
+
+The files in the `zvml-python-sdk/examples/ransomware` folder provide a set of scripts to simulate a ransomware-style
+**encryption and decryption event** on a Linux VM. It is designed for use with **Zerto 10.0 U1+ (ZVML)** to demonstrate
+ransomware detection and alerting capabilities—**without requiring any OVF templates or pre-built Windows VMs**.
+
+This is a lightweight, Linux-native alternative to [RanSim](https://github.com/lawndoc/RanSim), ideal for fast
+deployment and testing in Zerto-protected environments.
+
+---
+
+## Purpose
+
+- Simulate encryption of user files to trigger Zerto’s ransomware detection engine.
+- Demonstrate how ZVM (Zerto Virtual Manager) identifies abnormal encryption behavior.
+- Provide a reversible, easy-to-run simulation environment using shell scripts.
+
+---
+
+## Prerequisites
+
+- A Linux VM (Debian, Ubuntu, Rocky, RHEL, etc.)
+- Zerto ZVML (Zerto Virtual Manager Linux) **10.0 U1 or later**
+- A running VRA protecting the VM
+- The VM must be part of an existing **Virtual Protection Group (VPG)**
+- SSH or console access with write and execute permissions
+
+---
+
+## ZVM Tuning Parameters (Required)
+
+Add the following parameters to `tweaks.txt` on your **ZVM appliance**, or apply them using ZVM’s backend interface:
+
+```ini
+t_ransomwareAttackThreshold=2
+t_ransomwareEngTrainPeriodSec=60
+t_ransomwareEngCuSumThrsDiff=5
+t_ransomwareEngCuSumThrsSec=60
+t_ransomwareEngAvgTimeSec=180
+t_ransomwareEngCuSumTimeSec=2
+```
+
+> **IMPORTANT**: Restart the ZVM appliance (or the VM it's running on) to apply these changes.
+
+---
+
+## Recommended VM Configuration
+
+- At least **90 GB** of total disk space
+- Simulation dataset size: **~2 GB**
+
+---
+
+## Simulation Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-org/zvml-python-sdk.git
+cd zvml-python-sdk/examples/ransomware
+```
+
+### 2. Create the test dataset
+
+This command creates a folder containing 2000 files, each 1MB in size:
+
+```bash
+mkdir important-files
+./create_data_set.sh 1M 2000 important-files
+```
+
+You can modify the size and number of files as needed.
+
+### 3. Encrypt the dataset (simulate ransomware)
+
+This encrypts all files in the folder using `openssl` and appends an `.encrypted` extension:
+
+```bash
+./encrypt_files_recursive.sh ./important-files yourkeyword encrypted
+```
+
+- `yourkeyword`: your encryption password
+- `encrypted`: file extension to be appended (e.g., `.encrypted`)
+
+> Within **30 to 60 seconds**, ZVM should detect abnormal behavior and trigger an alert.
+
+### 4. Decrypt the dataset (restore files)
+
+To reverse the simulation and restore the original files:
+
+```bash
+./decrypt_files_recursive.sh ./important-files yourkeyword encrypted
+```
+
+---
+
+## Notes
+
+- These scripts use `openssl` for AES-256 encryption.
+- Make sure `openssl` is installed (`apt install openssl` or `yum install openssl` as needed).
+- All operations are local to the Linux VM — no outbound internet or services required.
+- You can modify or extend the scripts for more advanced or varied encryption behavior if needed.
+
+---
+
+## Disclaimer
+
+This simulation is provided **for demonstration and educational purposes only**.  
+Do **not** use these scripts on production systems or with sensitive/real data.  
+Only use in controlled, isolated lab environments. Always inspect and understand what a script does before execution.
+
+---
+
+## Credits
+
+- Based on concepts from [lawndoc/RanSim](https://github.com/lawndoc/RanSim)
+- Adapted for Linux-based Zerto simulation environments by [Your Name or Team]
