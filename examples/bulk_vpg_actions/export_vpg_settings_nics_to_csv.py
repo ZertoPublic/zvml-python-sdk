@@ -149,16 +149,31 @@ def get_safe_filename(timestamp):
     # Replace colons with underscores and remove any other problematic characters
     return timestamp.replace(':', '_').replace('/', '_').replace('\\', '_')
 
-def main():
+def setup_argparse() -> argparse.ArgumentParser:
+    """Set up command line argument parsing."""
     parser = argparse.ArgumentParser(description="Export VPG settings to CSV")
     parser.add_argument("--zvm_address", required=True, help="ZVM address")
     parser.add_argument('--client_id', required=True, help='Keycloak client ID')
     parser.add_argument('--client_secret', required=True, help='Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     parser.add_argument("--vpg_names", help="Comma-separated list of VPG names to export (optional)")
+    parser.add_argument("--output_dir", default='.', help="Directory to save exported files (default: current directory)")
+    return parser
+
+def ensure_output_dir(output_dir: str) -> None:
+    """Ensure the output directory exists."""
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        logging.info(f"Created output directory: {output_dir}")
+
+def main():
+    parser = setup_argparse()
     args = parser.parse_args()
 
     try:
+        # Ensure output directory exists
+        ensure_output_dir(args.output_dir)
+
         # Setup client
         client = setup_client(args)
 
@@ -186,7 +201,7 @@ def main():
         export_settings = client.vpgs.read_exported_vpg_settings(timestamp, vpg_names)
         
         # Save the JSON export
-        json_file_name = f"ExportedSettings_{safe_timestamp}.json"
+        json_file_name = os.path.join(args.output_dir, f"ExportedSettings_{safe_timestamp}.json")
         with open(json_file_name, 'w') as f:
             json.dump(export_settings['ExportedVpgSettingsApi'], f, indent=2)
         print(f"\nJSON export saved to: {json_file_name}")
@@ -195,7 +210,7 @@ def main():
         nic_settings = extract_nic_settings(export_settings['ExportedVpgSettingsApi'])
         
         # Create CSV file with Windows line endings
-        csv_file_name = f"ExportedSettings_{safe_timestamp}.csv"
+        csv_file_name = os.path.join(args.output_dir, f"ExportedSettings_{safe_timestamp}.csv")
         fieldnames = [
             'VPG Name', 'VM Identifier', 'NIC Identifier',
             'Failover Network', 'Failover ShouldReplaceIpConfiguration', 'Failover DHCP',
