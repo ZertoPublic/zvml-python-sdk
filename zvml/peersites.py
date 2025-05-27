@@ -19,23 +19,37 @@ class PeerSites:
         self.client = client
         self.tasks = Tasks(client)
 
-    def get_peer_sites(self):
+    def get_peer_sites(self, site_identifier=None):
         """
-        Get details of all peer sites paired with this site. (Auth)
+        Get details of peer sites. (Auth)
+        
+        Args:
+            site_identifier (str, optional): The identifier of a specific peer site to retrieve.
+                                            If not provided, returns all peer sites.
         
         Returns:
-            list: List of peer sites
+            dict/list: If site_identifier is provided, returns details of the specific peer site.
+                      Otherwise, returns a list of all peer sites.
         """
-        url = f"https://{self.client.zvm_address}/v1/peersites"
+        if site_identifier:
+            url = f"https://{self.client.zvm_address}/v1/peersites/{site_identifier}"
+            logging.info(f"PeerSites.get_peer_sites: Fetching peer site with identifier: {site_identifier}...")
+        else:
+            url = f"https://{self.client.zvm_address}/v1/peersites"
+            logging.info("PeerSites.get_peer_sites: Fetching all peer sites...")
+
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info("PeerSites.get_peer_sites: Fetching all peer sites...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
+            if site_identifier:
+                logging.info(f"PeerSites.get_peer_sites: Successfully retrieved peer site information for site identifier: {site_identifier}.")
+            else:
+                logging.info("PeerSites.get_peer_sites: Successfully retrieved all peer sites.")
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
@@ -202,34 +216,6 @@ class PeerSites:
             response = requests.post(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json() if response.content else None
-        except requests.exceptions.RequestException as e:
-            if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
-                try:
-                    error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
-                except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
-            else:
-                logging.error("HTTPError occurred with no response attached.")
-            raise
-
-        except Exception as e:
-            logging.error(f"Unexpected error: {e}")
-            raise
-
-    def get_peer_site(self, site_identifier):
-        logging.info(f"PeerSites.get_peer_site: Fetching peer site information for site identifier: {site_identifier}...")
-        url = f"https://{self.client.zvm_address}/v1/peersites/{site_identifier}"
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {self.client.token}'
-        }
-        try:
-            response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
-            response.raise_for_status()
-            logging.info(f"PeerSites.get_peer_site: Successfully retrieved peer site information for site identifier: {site_identifier}.")
-            return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
                 logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")

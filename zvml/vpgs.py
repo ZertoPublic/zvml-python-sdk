@@ -231,18 +231,30 @@ class VPGs:
 
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    error_message = error_details.get('Message', '')
+                    
+                    # Extract the actual error message after "Exception occurred in API:"
+                    if 'Exception occurred in API:' in error_message:
+                        detailed_error = error_message.split('Exception occurred in API:', 1)[1].strip()
+                        # Remove trailing semicolon if present
+                        detailed_error = detailed_error.rstrip(';')
+                        # Log only the detailed error message
+                        logging.error(f"Failed to add VM to VPG: {detailed_error}")
+                    else:
+                        logging.error(f"Failed to add VM to VPG: {error_message}")
+                    
+                    # Log the full error details at debug level for troubleshooting
+                    logging.debug(f"Full error response: {json.dumps(error_details, indent=2)}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logging.error(f"Failed to add VM to VPG: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logging.error(f"Failed to add VM to VPG: {str(e)}")
             raise
 
         except Exception as e:
-            logging.error(f"Unexpected error: {e}")
+            logging.error(f"Failed to add VM to VPG: {str(e)}")
             raise
 
     def remove_vm_from_vpg(self, vpg_name, vm_identifier):
