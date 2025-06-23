@@ -15,6 +15,7 @@ import time
 import json
 from .tasks import Tasks
 from .common import ZertoVPGStatus, ZertoVPGSubstatus, ZertoProtectedSiteType, ZertoRecoverySiteType, ZertoVPGPriority
+from .localsite import LocalSite
 from typing import Optional, Union, Dict, List
 
 class VPGs:
@@ -152,7 +153,8 @@ class VPGs:
             if sync:
                 # Wait for task completion
                 self.tasks.wait_for_task_completion(task_id, timeout=timeout, interval=interval)
-                logging.debug('sleeping 5 seconds ...')
+                logging.debug('sleeping 5 seconds ...') # looks like there is a bug in the Zerto API, so there is a need to sleep for 5 seconds
+                time.sleep(5)
                 self.wait_for_vpg_ready(vpg_name=vpg_name, timeout=30, interval=5, expected_status=expected_status)
                 return task_id
             return task_id
@@ -200,6 +202,25 @@ class VPGs:
             elapsed_time = time.time() - start_time
             if elapsed_time > timeout:
                 raise TimeoutError(f"VPG {vpg_name} did not reach the {ZertoVPGStatus.get_name_by_value(expected_status.value)} state within the allotted time. Current status: {ZertoVPGStatus.get_name_by_value(vpg_status.value)}")
+
+
+    def add_vm_to_vpg_by_name(self, vpg_name, vm_name):
+        logging.info(f'VPGs.add_vm_to_vpg_by_name(zvm_address={self.client.zvm_address}, vpg_name={vpg_name}, vm_name={vm_name})')
+
+        local_site = LocalSite(self.client.zvm_address, self.client.token)
+        local_site_identifier = local_site.get_local_site()['SiteIdentifier']
+        vms = self.client.virtualization_sites.get_virtualization_site_vms(site_identifier=local_site_identifier)
+        vm_dict = {vm.get('VmName'): vm for vm in vms}
+        
+        if vm_name not in vm_dict:
+            logging.error(f"VM with name '{vm_name}' not found.")
+            return
+        
+        vm_id = vm_dict[vm_name]['VmIdentifier']
+        vm_payload = {
+            "VmIdentifier": vm_id
+        }
+        return self.add_vm_to_vpg(vpg_name, vm_payload)
 
     def add_vm_to_vpg(self, vpg_name, vm_list_payload):
         logging.info(f'VPGs.add_vm_to_vpg(zvm_address={self.client.zvm_address}, vpg_name={vpg_name})')
