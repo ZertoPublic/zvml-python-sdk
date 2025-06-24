@@ -54,4 +54,4 @@ class Tasks:
                     raise Exception(f"Task failed: {task_info.get('CompleteReason', 'No reason provided')}")
             except requests.exceptions.RequestException as e:
                 logging.error(f"Request failed: {e}")
-                raise
+                continue
