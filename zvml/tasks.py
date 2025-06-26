@@ -52,6 +52,17 @@ class Tasks:
                 else:
                     logging.error(f'Task ID={task_identifier} failed. task state={ZertoTaskStates.get_name_by_value(state)}')
                     raise Exception(f"Task failed: {task_info.get('CompleteReason', 'No reason provided')}")
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 401:
+                    # Task might be completed and no longer accessible
+                    logging.info(f'Task ID={task_identifier} returned 401 - task may be completed and no longer accessible')
+                    time.sleep(interval)
+                    continue
+                else:
+                    logging.error(f"HTTP request failed: {e}")
+                    time.sleep(interval)
+                    continue
             except requests.exceptions.RequestException as e:
-                logging.error(f"Request failed: {e}")
+                logging.info(f"Request failed: {e}")
+                time.sleep(interval)
                 continue
