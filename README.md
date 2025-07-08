@@ -54,7 +54,7 @@ The library is organized into several modules:
 
 ## Requirements
 
-- Python 3.6+
+- Python 3.11+
 - Zerto Virtual Replication environment
 - Network access to ZVM server
 - Keycloak authentication credentials
