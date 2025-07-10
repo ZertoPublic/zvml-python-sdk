@@ -103,6 +103,9 @@ def main():
 
         # Get the peer (second) site identifier
         local_site = client.localsite.get_local_site()
+        local_site_id = local_site['SiteIdentifier']
+        logging.info(f"Local site identifier: {local_site_id}")
+
         peer_site = next(site for site in sites 
                         if site['SiteIdentifier'] != local_site['SiteIdentifier'])
         peer_site_id = peer_site['SiteIdentifier']
@@ -126,9 +129,15 @@ def main():
         # Example 1: Get all protected VMs
         logging.info("\nExample 1: Getting all protected VMs")
         vms = client.vms.list_vms()
-        # logging.info(f'vms: {json.dumps(vms, indent=2)}')
+        logging.info(f'vms: {json.dumps(vms, indent=2)}')
         if len(vms) == 0:
             raise ValueError("No protected VMs found")  
+        
+        # Example 1.1: Get all unprotected VMs at the local site
+        unprotected_vms = client.virtualization_sites.get_virtualization_site_vms(local_site_id)
+        if not unprotected_vms:
+            raise ValueError("No unprotected vms found at local site")
+        logging.info(f"Unprotected vms at the local site: {json.dumps(unprotected_vms, indent=2)}")
 
         # Example 2: If we found any VMs, get details for the first one
         first_vm = vms[0]
@@ -219,7 +228,7 @@ def main():
                 vpg_identifier=vpg_id
             )
             logging.info(f"Found {len(points_in_time)} points in time:")
-            logging.info(json.dumps(points_in_time, indent=2))
+            logging.debug(json.dumps(points_in_time, indent=2))
         except Exception as e:
             logging.error(f"Failed to get VM points in time: {e}")
         
@@ -231,7 +240,7 @@ def main():
                 vpg_identifier=vpg_id  # Optional, but may be required if VM is in multiple VPGs
             )
             logging.info("Points in time stats:")
-            logging.info(json.dumps(points_in_time_stats, indent=2))
+            logging.debug(json.dumps(points_in_time_stats, indent=2))
         except Exception as e:
             logging.error(f"Failed to get VM points in time stats: {e}")
         
