@@ -12,6 +12,9 @@
 import requests
 import logging
 
+# Create module-specific logger
+logger = logging.getLogger(__name__)
+
 class VirtualizationSites:
     def __init__(self, client):
         self.client = client
@@ -34,9 +37,9 @@ class VirtualizationSites:
         url = f"https://{self.client.zvm_address}/v1/virtualizationsites"
         if site_identifier:
             url = f"{url}/{site_identifier}"
-            logging.info(f"VirtualizationSites.get_virtualization_sites: Fetching site {site_identifier}...")
+            logger.info(f"VirtualizationSites.get_virtualization_sites: Fetching site {site_identifier}...")
         else:
-            logging.info("VirtualizationSites.get_virtualization_sites: Fetching all virtualization sites...")
+            logger.info("VirtualizationSites.get_virtualization_sites: Fetching all virtualization sites...")
 
         headers = {
             'Content-Type': 'application/json',
@@ -49,14 +52,14 @@ class VirtualizationSites:
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise 
 
     def get_virtualization_site_vms(self, site_identifier):
@@ -81,21 +84,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_vms: Fetching VMs for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_vms: Fetching VMs for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise 
 
     def get_virtualization_site_vcd_vapps(self, site_identifier):
@@ -120,21 +123,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_vcd_vapps: Fetching VCD vApps for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_vcd_vapps: Fetching VCD vApps for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_datastores(self, site_identifier):
@@ -159,21 +162,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_datastores: Fetching datastores for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_datastores: Fetching datastores for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_folders(self, site_identifier):
@@ -198,21 +201,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_folders: Fetching folders for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_folders: Fetching folders for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_datastore_clusters(self, site_identifier):
@@ -237,21 +240,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_datastore_clusters: Fetching datastore clusters for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_datastore_clusters: Fetching datastore clusters for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_resource_pools(self, site_identifier):
@@ -276,21 +279,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_resource_pools: Fetching resource pools for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_resource_pools: Fetching resource pools for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_org_vdcs(self, site_identifier):
@@ -315,21 +318,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_org_vdcs: Fetching org VDCs for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_org_vdcs: Fetching org VDCs for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_networks(self, site_identifier):
@@ -354,21 +357,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_networks: Fetching networks for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_networks: Fetching networks for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_hosts(self, site_identifier, host_identifier=None):
@@ -393,9 +396,9 @@ class VirtualizationSites:
         url = f"https://{self.client.zvm_address}/v1/virtualizationsites/{site_identifier}/hosts"
         if host_identifier:
             url = f"{url}/{host_identifier}"
-            logging.info(f"VirtualizationSites.get_virtualization_site_hosts: Fetching host {host_identifier} from site {site_identifier}...")
+            logger.info(f"VirtualizationSites.get_virtualization_site_hosts: Fetching host {host_identifier} from site {site_identifier}...")
         else:
-            logging.info(f"VirtualizationSites.get_virtualization_site_hosts: Fetching all hosts for site {site_identifier}...")
+            logger.info(f"VirtualizationSites.get_virtualization_site_hosts: Fetching all hosts for site {site_identifier}...")
 
         headers = {
             'Content-Type': 'application/json',
@@ -408,14 +411,14 @@ class VirtualizationSites:
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_repositories(self, site_identifier):
@@ -440,21 +443,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_repositories: Fetching repositories for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_repositories: Fetching repositories for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_host_clusters(self, site_identifier):
@@ -479,21 +482,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_host_clusters: Fetching host clusters for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_host_clusters: Fetching host clusters for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_org_vdc_networks(self, site_identifier, org_vdc_identifier):
@@ -519,21 +522,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_org_vdc_networks: Fetching networks for org VDC {org_vdc_identifier} in site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_org_vdc_networks: Fetching networks for org VDC {org_vdc_identifier} in site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_org_vdc_storage_policies(self, site_identifier, org_vdc_identifier):
@@ -559,21 +562,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_org_vdc_storage_policies: Fetching storage policies for org VDC {org_vdc_identifier} in site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_org_vdc_storage_policies: Fetching storage policies for org VDC {org_vdc_identifier} in site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_devices(self, site_identifier, host_identifier=None, device_name=None):
@@ -612,21 +615,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_devices: Fetching devices for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_devices: Fetching devices for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, params=params, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_networks(self, site_identifier):
@@ -651,21 +654,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_networks: Fetching public cloud virtual networks for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_networks: Fetching public cloud virtual networks for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_subnets(self, site_identifier):
@@ -690,21 +693,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_subnets: Fetching public cloud subnets for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_subnets: Fetching public cloud subnets for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_security_groups(self, site_identifier):
@@ -729,21 +732,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_security_groups: Fetching public cloud security groups for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_security_groups: Fetching public cloud security groups for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_vm_instance_types(self, site_identifier):
@@ -768,21 +771,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_vm_instance_types: Fetching VM instance types for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_vm_instance_types: Fetching VM instance types for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_resource_groups(self, site_identifier):
@@ -807,21 +810,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_resource_groups: Fetching resource groups for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_resource_groups: Fetching resource groups for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_keys_containers(self, site_identifier):
@@ -846,21 +849,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_keys_containers: Fetching keys containers for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_keys_containers: Fetching keys containers for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_encryption_keys(self, site_identifier, encryption_key_id=None):
@@ -885,9 +888,9 @@ class VirtualizationSites:
         url = f"https://{self.client.zvm_address}/v1/virtualizationsites/{site_identifier}/publiccloud/encryptionkeys"
         if encryption_key_id:
             url = f"{url}/{encryption_key_id}"
-            logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_encryption_keys: Fetching encryption key {encryption_key_id} for site {site_identifier}...")
+            logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_encryption_keys: Fetching encryption key {encryption_key_id} for site {site_identifier}...")
         else:
-            logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_encryption_keys: Fetching all encryption keys for site {site_identifier}...")
+            logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_encryption_keys: Fetching all encryption keys for site {site_identifier}...")
 
         headers = {
             'Content-Type': 'application/json',
@@ -900,14 +903,14 @@ class VirtualizationSites:
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_managed_identities(self, site_identifier):
@@ -932,21 +935,21 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_managed_identities: Fetching managed identities for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_managed_identities: Fetching managed identities for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise
 
     def get_virtualization_site_public_cloud_disk_encryption_keys(self, site_identifier):
@@ -971,19 +974,19 @@ class VirtualizationSites:
             'Authorization': f'Bearer {self.client.token}'
         }
         
-        logging.info(f"VirtualizationSites.get_virtualization_site_public_cloud_disk_encryption_keys: Fetching disk encryption keys for site {site_identifier}...")
+        logger.info(f"VirtualizationSites.get_virtualization_site_public_cloud_disk_encryption_keys: Fetching disk encryption keys for site {site_identifier}...")
         try:
             response = requests.get(url, headers=headers, verify=self.client.verify_certificate)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             if e.response is not None:
-                logging.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
+                logger.error(f"HTTPError: {e.response.status_code} - {e.response.reason}")
                 try:
                     error_details = e.response.json()
-                    logging.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
+                    logger.error(f"Error Message: {error_details.get('Message', 'No detailed error message available')}")
                 except ValueError:
-                    logging.error(f"Response content: {e.response.text}")
+                    logger.error(f"Response content: {e.response.text}")
             else:
-                logging.error("HTTPError occurred with no response attached.")
+                logger.error("HTTPError occurred with no response attached.")
             raise

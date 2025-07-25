@@ -5,12 +5,18 @@
 # The author and Zerto further disclaim all implied warranties including, without limitation, 
 # any implied warranties of merchantability or of fitness for a particular purpose.
 
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
 import argparse
 import sys
 import os
 import time
 import paramiko
-import logging
 import urllib3
 from zvml.client import Client
 from zvml.encryptiondetection import EncryptionDetection
@@ -76,12 +82,6 @@ def main():
     parser.add_argument("--vm_user", required=True, help="Linux VM username")
     parser.add_argument("--vm_password", required=True, help="Linux VM password")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Setup client

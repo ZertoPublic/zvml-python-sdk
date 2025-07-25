@@ -57,13 +57,12 @@ Script Flow:
 8. Cleans up by deleting both VPGs
 """
 
+# Configure logging BEFORE any imports
 import logging
-# Configure logging before any other imports or code
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-
 import argparse
 import urllib3
 import json
@@ -105,6 +104,8 @@ def main():
     parser.add_argument("--vm1", required=True, help="Name of first VM to protect")
     parser.add_argument("--vm2", required=True, help="Name of second VM to protect")
     args = parser.parse_args()
+
+    logging.warning("TEST TEST TEST")
 
     try:
         # Setup clients and get site identifiers

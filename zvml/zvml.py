@@ -12,14 +12,6 @@
 import requests
 import logging
 import ssl
-
-# Configure logging with timestamp format
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-
 # Import all necessary classes
 from .tasks import Tasks
 from .vpgs import VPGs

@@ -43,13 +43,13 @@ Example Usage:
         --client_secret <client_secret> \
         --ignore_ssl
 """
-
-import argparse
+# Configure logging BEFORE any imports
 import logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
+import argparse
 import urllib3
 import sys
 import os

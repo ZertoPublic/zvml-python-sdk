@@ -60,13 +60,17 @@ Script Flow:
 Note: This script demonstrates basic ZORG management capabilities and can be used
 as a foundation for more complex ZORG operations and automation.
 """
-
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
-import logging
 import urllib3
 import json
 from zvml import ZVMLClient
@@ -82,12 +86,6 @@ def main():
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     parser.add_argument("--zorg_id", help="Optional: Specific ZORG ID to query")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Connect to ZVM

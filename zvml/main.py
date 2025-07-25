@@ -20,8 +20,6 @@ def main():
     parser.add_argument("--password", required=True, help="Password")
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
-
     try:
         client = ZVMLClient(zvm_address=args.zvm_address, username=args.username, password=args.password)
         # Example usage

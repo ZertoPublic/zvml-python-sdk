@@ -37,13 +37,17 @@ Example Usage:
         --client_secret <client_secret> \
         --ignore_ssl
 """
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import argparse
-import logging
 import urllib3
 from zvml import ZVMLClient
 from zvml.server_date_time import DateTimeFormat
@@ -58,12 +62,6 @@ def main():
     parser.add_argument('--client_secret', required=True, help='Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Connect to ZVM

@@ -59,10 +59,13 @@ confirmation. It demonstrates proper error handling and logging for VRA manageme
 operations.
 """
 
-#!/usr/bin/python3
-import argparse
+# Configure logging BEFORE any imports
 import logging
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+import argparse
 import urllib3
 import json
 import sys
@@ -205,12 +208,6 @@ def main():
     parser.add_argument('--client_secret', required=True, help='Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Setup client

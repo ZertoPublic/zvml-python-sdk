@@ -43,13 +43,17 @@ Example Usage:
         --site2_client_secret <secret2> \
         --ignore_ssl
 """
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import argparse
-import logging
 import urllib3
 import json
 import time
@@ -68,12 +72,6 @@ def main():
     parser.add_argument('--site2_client_secret', required=True, help='site 2 Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Initialize the site 1 client

@@ -69,13 +69,17 @@ Script Flow:
 8. Generates test reports
 9. Cleans up by deleting both VPGs
 """
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import argparse
-import logging
 import urllib3
 import json
 from zvml import ZVMLClient
@@ -222,8 +226,6 @@ def main():
     # parser.add_argument('--site2_client_secret', required=True, help='Site 2 Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    logging.basicConfig(level=logging.DEBUG)
 
     try:
         vpg_structure = [

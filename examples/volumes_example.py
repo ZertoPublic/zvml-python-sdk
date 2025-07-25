@@ -46,14 +46,17 @@ Example Usage:
 Note: This script focuses on volume operations and requires only Site 1 credentials
 since it performs read-only operations on the protected site.
 """
-
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import urllib3
 import argparse
-import logging
 import json
 from zvml import ZVMLClient
 
@@ -67,9 +70,6 @@ def main():
     parser.add_argument('--client_secret', required=True, help='Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     try:
         # Initialize the client

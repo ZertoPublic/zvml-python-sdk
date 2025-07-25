@@ -69,12 +69,13 @@ Note: This script requires only protected site credentials. It's designed for VP
 configuration backup and restore scenarios, allowing you to quickly recreate VPGs
 with identical settings after changes or in disaster recovery situations.
 """
-import argparse
+# Configure logging BEFORE any imports
 import logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
+import argparse
 import urllib3
 import json
 import sys

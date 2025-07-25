@@ -56,13 +56,17 @@ Note: VM restore functionality is commented out in this example as it may return
 # NOTE
 # this example assumes that at least one VPG exists on the ZVM and protected VMs exist in the VPG
 # the vm restore is commnted out as it fails with a 500 
-
+# Configure logging BEFORE any imports
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
-import logging
 import urllib3
 import json
 from zvml import ZVMLClient
@@ -78,12 +82,6 @@ def main():
     parser.add_argument('--client_secret', required=True, help='Keycloak client secret')
     parser.add_argument("--ignore_ssl", action="store_true", help="Ignore SSL certificate verification")
     args = parser.parse_args()
-
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
 
     try:
         # Connect to ZVM
