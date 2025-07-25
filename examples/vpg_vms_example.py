@@ -220,11 +220,19 @@ def main():
                 }
             }
         }
-        
+
+        scratch = {
+            "Limitation": {
+                "HardLimitInMB": 407200,
+                "HardLimitInPercent": 0,
+                "WarningThresholdInMB": 400000,
+                "WarningThresholdInPercent": 0
+            }
+        }
         input("Press Enter to create the first VPG...")
 
         vpg_id = client1.vpgs.create_vpg(basic=basic, journal=journal, 
-                                         recovery=recovery, networks=networks, sync=True)
+                                         recovery=recovery, networks=networks, scratch=scratch, sync=True)
         logging.info(f"VPG ID: {vpg_id} created successfully.")
 
         # Add VMs to the first VPG

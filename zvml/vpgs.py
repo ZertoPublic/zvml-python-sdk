@@ -175,10 +175,10 @@ class VPGs:
             logging.error(f"Unexpected error: {e}")
             raise
 
-    def create_vpg(self, basic, journal, recovery, networks, sync=True, status: ZertoVPGStatus = ZertoVPGStatus.Initializing, timeout=30, interval=5):
+    def create_vpg(self, basic, journal, recovery, networks, scratch = None, sync=True, status: ZertoVPGStatus = ZertoVPGStatus.Initializing, timeout=30, interval=5):
         vpg_name = basic.get("Name")
         logging.info(f'VPGs.create_vpg(zvm_address={self.client.zvm_address}, vpg_name={vpg_name}, sync={sync})')
-        vpg_settings_id = self.create_vpg_settings(basic, journal, recovery, networks, vpg_identifier=None)
+        vpg_settings_id = self.create_vpg_settings(basic, journal, recovery, networks, scratch, vpg_identifier=None)
         return self.commit_vpg(vpg_settings_id, vpg_name, sync, expected_status=status, timeout=timeout, interval=interval)
 
     def wait_for_vpg_ready(self, vpg_name, timeout=180, interval=5, expected_status=ZertoVPGStatus.Initializing):
@@ -624,7 +624,7 @@ class VPGs:
                 logging.error("HTTPError occurred with no response attached.")
             raise
 
-    def create_vpg_settings(self, basic=None, journal=None, recovery=None, networks=None, vpg_identifier=None):
+    def create_vpg_settings(self, basic=None, journal=None, recovery=None, networks=None, scratch=None, vpg_identifier=None):
         logging.info(f'VPGs.create_vpg_settings(zvm_address={self.client.zvm_address}, vpg_identifier={vpg_identifier})')
         vpg_settings_uri = f"https://{self.client.zvm_address}/v1/vpgSettings"
         headers = {
@@ -643,6 +643,8 @@ class VPGs:
             payload["Recovery"] = recovery
         if networks:
             payload["Networks"] = networks
+        if scratch:
+            payload["Scratch"] = scratch
 
         logging.debug(f"VPGs.create_vpg_settings: Payload: {json.dumps(payload, indent=4)}")
         try:
